@@ -1,0 +1,2 @@
+# pydocproj
+research document helper 
