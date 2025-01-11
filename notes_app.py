@@ -29,6 +29,17 @@ def get_definition(word):
     else:
         return [f"Error: Unable to find the word '{word}'"]
 
+def visualize():
+    visual_window = Toplevel(root)
+    visual_window.title("Visualization of topic")
+    visual_window.geometry("1200x620+10+10")
+
+    frame = Frame(visual_window)
+    frame.pack(expand= True, fill=BOTH, padx=10, pady=10)
+
+    
+
+
 def create_non_modal_message(selected_word, definitions):
     # Create a new Toplevel window for the custom message box
     message_window = Toplevel(root)
@@ -73,9 +84,15 @@ menubar = Menu(root)
 root.config(menu=menubar)
 
 filemenu = Menu(menubar, tearoff=False)
+visualizemenu = Menu(menubar, tearoff= False)
+
 menubar.add_cascade(label='File', menu=filemenu)
+menubar.add_command(label="Visualize", command=visualize) #visualizing the subtopics
+
+
 filemenu.add_command(label='Open', accelerator='Control+O', command=openfile)
 filemenu.add_command(label='Save', accelerator='Control+S')
+
 filemenu.add_separator()
 filemenu.add_command(label='Exit', accelerator='Ctrl+Q', command=quitapp)
 root.bind('<Control-q>', quitapp)
