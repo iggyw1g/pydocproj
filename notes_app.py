@@ -45,7 +45,8 @@ def visualize(doc):
     texts = "\n".join(entities) if entities else "No entities found."
 
     label = Label(visual_window, text=texts)
-    label.pack(padx=10, pady=10, fill="both", expand=True)
+    label.pack(padx=0, pady=0, fill="both", expand=True)
+
     
 
 
@@ -119,7 +120,7 @@ root.bind('<Control-q>', quitapp)
 text_area = Text(root, wrap="word")
 text_area.pack(expand=True, fill="both")
 
-text_area.bind("<ButtonRelease-1>", on_highlight_and_click)
+text_area.bind("<Control-d>", on_highlight_and_click)
 
 
 
