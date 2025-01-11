@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import filedialog
 import requests
+#import languagemodels as lm
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
 
 def quitapp(event=None):
     root.destroy()
@@ -37,7 +40,7 @@ def visualize():
     frame = Frame(visual_window)
     frame.pack(expand= True, fill=BOTH, padx=10, pady=10)
 
-    
+
 
 
 def create_non_modal_message(selected_word, definitions):
