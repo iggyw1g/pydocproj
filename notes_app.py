@@ -1,9 +1,13 @@
 from tkinter import *
 from tkinter import filedialog
 import requests
+import re
 #import languagemodels as lm
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
+#from sklearn.feature_extraction.text import CountVectorizer
+#from sklearn.decomposition import LatentDirichletAllocation
+import spacy
+
+nlp = spacy.load("en_core_web_sm")
 
 def quitapp(event=None):
     root.destroy()
@@ -32,15 +36,17 @@ def get_definition(word):
     else:
         return [f"Error: Unable to find the word '{word}'"]
 
-def visualize():
+def visualize(doc):
     visual_window = Toplevel(root)
     visual_window.title("Visualization of topic")
     visual_window.geometry("1200x620+10+10")
 
-    frame = Frame(visual_window)
-    frame.pack(expand= True, fill=BOTH, padx=10, pady=10)
+    entities = [f"{entity.text}" for entity in doc.ents]
+    texts = "\n".join(entities) if entities else "No entities found."
 
-
+    label = Label(visual_window, text=texts)
+    label.pack(padx=10, pady=10, fill="both", expand=True)
+    
 
 
 def create_non_modal_message(selected_word, definitions):
@@ -71,11 +77,21 @@ def create_non_modal_message(selected_word, definitions):
 def on_highlight_and_click(event):
     try:
         selected_word = text_area.get(SEL_FIRST, SEL_LAST).strip()
-        if selected_word:
-            definitions = get_definition(selected_word)
-            create_non_modal_message(selected_word, definitions)
+        cleaned_word = re.sub(r'[^a-zA-Z\s]', ' ', selected_word) #Getting rid of non-letters
+        if cleaned_word:
+            definitions = get_definition(cleaned_word)
+            create_non_modal_message(cleaned_word, definitions)
     except TclError:
         pass
+
+def getText():
+    try:
+        text = text_area.get("1.0", END).strip() #1 is the starting point
+        doc = nlp(text)
+        visualize(doc)
+    except TclError:
+        pass
+
 
 
 root = Tk()
@@ -90,7 +106,7 @@ filemenu = Menu(menubar, tearoff=False)
 visualizemenu = Menu(menubar, tearoff= False)
 
 menubar.add_cascade(label='File', menu=filemenu)
-menubar.add_command(label="Visualize", command=visualize) #visualizing the subtopics
+menubar.add_command(label="Visualize", command=getText) #visualizing the subtopics
 
 
 filemenu.add_command(label='Open', accelerator='Control+O', command=openfile)
@@ -104,5 +120,7 @@ text_area = Text(root, wrap="word")
 text_area.pack(expand=True, fill="both")
 
 text_area.bind("<ButtonRelease-1>", on_highlight_and_click)
+
+
 
 root.mainloop()
