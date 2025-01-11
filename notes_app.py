@@ -1,5 +1,8 @@
 from tkinter import *
 from tkinter import filedialog
+from tkinter import messagebox
+import requests
+
 
 def quitapp(event=None):
     root.destroy()
@@ -14,7 +17,34 @@ def openfile():
 
         text_area.insert(1.0, content)
 
+def get_definition(word):
+    url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
+    response = requests.get(url)
 
+    if response.status_code == 200:
+        data = response.json()
+        definitions = [
+            meaning["definitions"][0]["definition"]
+            for meaning in data[0]["meanings"]
+        ]
+
+        return definitions
+    else:
+        return [f"Error: Unable to find the word '{word}'"]
+    
+
+def on_highlight_and_click(event):
+    try:
+        selected_word = text_area.get(SEL_FIRST, SEL_LAST).strip()
+        if selected_word:
+            definitions = get_definition(selected_word)
+            messagebox.showinfo(
+                f"Definition of '{selected_word}'",
+                "\n".join([f"{i+1}. {definition}" for i, definition in enumerate(definitions)]),
+            )
+    except TclError:
+        pass
+                
 
 root = Tk()
 root.title('Text Editor')
@@ -37,5 +67,7 @@ root.bind('<Control-q>', quitapp)
 
 text_area = Text(root, wrap="word")
 text_area.pack(expand=True, fill="both")
+text_area.bind("<ButtonRelease-1>", on_highlight_and_click)
+
 
 root.mainloop()
