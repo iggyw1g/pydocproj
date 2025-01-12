@@ -22,6 +22,9 @@ def openfile():
             content = file.read()
         text_area.insert(1.0, content)
 
+#def addBullet():
+
+
 def get_definition(word):
     url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
     response = requests.get(url)
@@ -76,10 +79,8 @@ def chatBot():
     #user_input = StringVar()
     chat_area = Entry(visual_window)
     chat_area.pack(fill=X)
-    
 
     chat_area.bind("<Return>", lambda event: start_chat(event,chat_area, messages))
-    
 
 
 
@@ -137,9 +138,12 @@ menubar = Menu(root)
 root.config(menu=menubar)
 
 filemenu = Menu(menubar, tearoff=False)
+formatmenu = Menu(menubar, tearoff=False)
 visualizemenu = Menu(menubar, tearoff= False)
 
 menubar.add_cascade(label='File', menu=filemenu)
+menubar.add_cascade(label="Format", menu=formatmenu)
+
 menubar.add_command(label="Visualize", command=getText) #visualizing the subtopics
 menubar.add_command(label="ChatBot", command=chatBot)
 
@@ -155,7 +159,6 @@ text_area = Text(root, wrap="word")
 text_area.pack(expand=True, fill="both")
 
 text_area.bind("<Control-r>", on_highlight_and_click)
-
 
 
 root.mainloop()
