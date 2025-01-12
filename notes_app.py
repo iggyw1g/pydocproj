@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 import requests
 import re
-#import languagemodels as lm
+import languagemodels as lm
 #from sklearn.feature_extraction.text import CountVectorizer
 #from sklearn.decomposition import LatentDirichletAllocation
 import spacy
@@ -47,7 +47,40 @@ def visualize(doc):
     label = Label(visual_window, text=texts)
     label.pack(padx=0, pady=0, fill="both", expand=True)
 
+def start_chat(event, chat_area, messages):
+
+    user_msg = chat_area.get()
+    if user_msg.strip():
+        chatbot_response = lm.do(user_msg)
+        messages.config(state=NORMAL)
+        messages.insert(END,f"You: {user_msg}\n")
+        messages.insert(END,f"Bot: {chatbot_response}\n")
+        messages.config(state=DISABLED)
+        messages.see(END)
+        
+
+    chat_area.delete(0, END)
+    return "break"
+
+
+def chatBot():
+    visual_window = Toplevel(root)
+    visual_window.title("ChatBot")
+    visual_window.geometry("1200x620+10+10")
+    visual_window.resizable(False,False)
+
+    messages = Text(visual_window, state=DISABLED, wrap=WORD, bg = "lightgray")
+    messages.pack(fill=BOTH,expand=True)
+    #chat_window.title("ChatBot")
+    #chat_window.geometry("1200x620+10+10")
+    #user_input = StringVar()
+    chat_area = Entry(visual_window)
+    chat_area.pack(fill=X)
     
+
+    chat_area.bind("<Return>", lambda event: start_chat(event,chat_area, messages))
+    
+
 
 
 def create_non_modal_message(selected_word, definitions):
@@ -87,7 +120,7 @@ def on_highlight_and_click(event):
 
 def getText():
     try:
-        text = text_area.get("1.0", END).strip() #1 is the starting point
+        text = text_area.get("1.0", END).strip() 
         doc = nlp(text)
         visualize(doc)
     except TclError:
@@ -108,6 +141,7 @@ visualizemenu = Menu(menubar, tearoff= False)
 
 menubar.add_cascade(label='File', menu=filemenu)
 menubar.add_command(label="Visualize", command=getText) #visualizing the subtopics
+menubar.add_command(label="ChatBot", command=chatBot)
 
 
 filemenu.add_command(label='Open', accelerator='Control+O', command=openfile)
