@@ -120,7 +120,7 @@ root.bind('<Control-q>', quitapp)
 text_area = Text(root, wrap="word")
 text_area.pack(expand=True, fill="both")
 
-text_area.bind("<Control-d>", on_highlight_and_click)
+text_area.bind("<Control-r>", on_highlight_and_click)
 
 
 
