@@ -82,7 +82,8 @@ def chatBot():
 
     chat_area.bind("<Return>", lambda event: start_chat(event,chat_area, messages))
 
-
+def addBullet(event, text_area):
+    text_area.insert(1.0,'*')
 
 def create_non_modal_message(selected_word, definitions):
     # Create a new Toplevel window for the custom message box
@@ -141,24 +142,30 @@ filemenu = Menu(menubar, tearoff=False)
 formatmenu = Menu(menubar, tearoff=False)
 visualizemenu = Menu(menubar, tearoff= False)
 
+
+text_area = Text(root, wrap="word")
+
 menubar.add_cascade(label='File', menu=filemenu)
 menubar.add_cascade(label="Format", menu=formatmenu)
+formatmenu.add_command(label="Enable Bullets", accelerator='Tab')
 
 menubar.add_command(label="Visualize", command=getText) #visualizing the subtopics
 menubar.add_command(label="ChatBot", command=chatBot)
 
-
+filemenu.add_command(label='New', accelerator='Control+N')
 filemenu.add_command(label='Open', accelerator='Control+O', command=openfile)
 filemenu.add_command(label='Save', accelerator='Control+S')
-
 filemenu.add_separator()
 filemenu.add_command(label='Exit', accelerator='Ctrl+Q', command=quitapp)
 root.bind('<Control-q>', quitapp)
+#root.bind('<Control-n>', new)
+#root.bind('<Control-s>', save)
 
-text_area = Text(root, wrap="word")
+
 text_area.pack(expand=True, fill="both")
 
 text_area.bind("<Control-r>", on_highlight_and_click)
 
+text_area.bind("<Control-b>", lambda event: addBullet(event, text_area))
 
 root.mainloop()
