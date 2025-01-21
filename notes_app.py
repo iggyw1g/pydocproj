@@ -147,7 +147,7 @@ text_area = Text(root, wrap="word")
 
 menubar.add_cascade(label='File', menu=filemenu)
 menubar.add_cascade(label="Format", menu=formatmenu)
-formatmenu.add_command(label="Enable Bullets", accelerator='Tab')
+#formatmenu.add_command(label="Enable Bullets", accelerator='Tab')
 
 menubar.add_command(label="Visualize", command=getText) #visualizing the subtopics
 menubar.add_command(label="ChatBot", command=chatBot)
